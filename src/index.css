@@ -21,7 +21,9 @@
 /* =============================================
    RESET & BASE
    ============================================= */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -130,7 +132,8 @@ button {
   position: relative;
   overflow: hidden;
   box-shadow: 0 0 10px var(--neon-blue-glow);
-  min-height: 48px; /* Touch-friendly minimum */
+  min-height: 48px;
+  /* Touch-friendly minimum */
 }
 
 .btn-primary::before {
@@ -216,7 +219,8 @@ button {
   font-size: 1rem;
   font-family: 'Outfit', sans-serif;
   transition: all 0.3s ease;
-  min-height: 50px; /* Touch-friendly */
+  min-height: 50px;
+  /* Touch-friendly */
 }
 
 .input-field:focus {
@@ -239,10 +243,23 @@ button {
    ANIMATIONS
    ============================================= */
 @keyframes scanningFrame {
-  0% { transform: translateY(-100%); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(100%); opacity: 0; }
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
 }
 
 .scan-line {
@@ -258,9 +275,17 @@ button {
 }
 
 @keyframes pulseBorder {
-  0% { box-shadow: 0 0 0 0 var(--neon-blue-glow); }
-  70% { box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+  0% {
+    box-shadow: 0 0 0 0 var(--neon-blue-glow);
+  }
+
+  70% {
+    box-shadow: 0 0 0 15px rgba(37, 99, 235, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
 }
 
 .pulse-active {
@@ -268,17 +293,31 @@ button {
 }
 
 @keyframes barGrow {
-  from { width: 0; }
+  from {
+    width: 0;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spin {
@@ -422,7 +461,8 @@ button {
   justify-content: space-between;
 }
 
-.drawer-link:hover, .drawer-link.active {
+.drawer-link:hover,
+.drawer-link.active {
   background: rgba(37, 99, 235, 0.06);
   color: var(--neon-blue);
 }
@@ -436,7 +476,7 @@ button {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: 68px;
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -449,26 +489,31 @@ button {
   display: flex;
   height: 100%;
   align-items: stretch;
-  justify-content: center;   /* ← center the group */
-  max-width: 480px;          /* ← cap width so it doesn't spread on wide phones */
-  margin: 0 auto;            /* ← horizontally center the group */
+  justify-content: space-evenly;
+  /* ← spread items evenly */
+  max-width: 480px;
+  /* ← cap width so it doesn't spread on wide phones */
+  margin: 0 auto;
+  /* ← horizontally center the group */
+  width: 100%;
 }
 
 .mobile-nav-item {
   flex: 1;
-  max-width: 96px;           /* ← each tab has a max width so they don't overstretch */
+  max-width: 100px;
+  /* ← each tab has a max width so they don't overstretch */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 5px;
   text-decoration: none;
   color: var(--text-secondary);
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  padding: 6px 4px;
+  padding: 8px 10px;
   transition: all 0.2s ease;
   border-top: 2px solid transparent;
   position: relative;
@@ -665,7 +710,8 @@ button {
     flex-direction: column;
     gap: 12px;
     padding: 14px 16px;
-    bottom: 74px; /* above mobile nav */
+    bottom: 74px;
+    /* above mobile nav */
     border-radius: 12px;
     margin: 0 -4px;
   }
@@ -689,8 +735,13 @@ button {
   }
 
   /* Page heading font sizes */
-  h1 { font-size: clamp(1.6rem, 5vw, 2.5rem) !important; }
-  h2 { font-size: clamp(1.3rem, 4vw, 2rem) !important; }
+  h1 {
+    font-size: clamp(1.6rem, 5vw, 2.5rem) !important;
+  }
+
+  h2 {
+    font-size: clamp(1.3rem, 4vw, 2rem) !important;
+  }
 }
 
 /* =============================================
@@ -706,7 +757,10 @@ button {
     padding-bottom: 84px;
   }
 
-  .btn-primary, .btn-gold, .btn-secondary, .btn-disabled {
+  .btn-primary,
+  .btn-gold,
+  .btn-secondary,
+  .btn-disabled {
     font-size: 0.85rem;
     letter-spacing: 1px;
     padding: 12px 16px;
@@ -717,7 +771,8 @@ button {
   }
 
   .input-field {
-    font-size: 16px; /* Prevents iOS auto-zoom on focus */
+    font-size: 16px;
+    /* Prevents iOS auto-zoom on focus */
   }
 
   .face-scanner-box {
