@@ -22,6 +22,22 @@ const Register = ({ setIsRegistered }) => {
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [faceDescriptor, setFaceDescriptor] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  // 🔥 Silently warm up the Render backend as soon as page loads.
+  // Render free tier spins down after inactivity; this prevents 30s freeze on registration submit.
+  useEffect(() => {
+    const wakeBackend = async () => {
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL}/health`, { signal: AbortSignal.timeout(10000) });
+        console.log('[Backend] Server is awake and ready.');
+      } catch {
+        console.warn('[Backend] Wake-up ping failed — server may still be cold-starting.');
+      }
+    };
+    wakeBackend();
+  }, []);
 
   useEffect(() => {
     const loadModels = async () => {
@@ -64,11 +80,18 @@ const Register = ({ setIsRegistered }) => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setSubmitError('');
     
     if (!faceDescriptor) {
       alert("Please capture your face first.");
       return;
     }
+
+    setIsSubmitting(true);
+
+    // AbortController gives us a 35-second timeout (Render cold-start can take ~30s)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 35000);
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/register`, {
@@ -76,6 +99,7 @@ const Register = ({ setIsRegistered }) => {
         headers: {
           'Content-Type': 'application/json',
         },
+        signal: controller.signal,
         body: JSON.stringify({
           fullName,
           voterId,
@@ -84,6 +108,7 @@ const Register = ({ setIsRegistered }) => {
         })
       });
 
+      clearTimeout(timeoutId);
       const result = await response.json();
 
       if (result.success) {
@@ -92,12 +117,19 @@ const Register = ({ setIsRegistered }) => {
           navigate('/login');
         }, 1000);
       } else {
-        alert("Registration Failed: " + result.message);
+        setSubmitError("Registration Failed: " + result.message);
       }
 
     } catch (err) {
+      clearTimeout(timeoutId);
       console.error(err);
-      alert("Network Error during registration");
+      if (err.name === 'AbortError') {
+        setSubmitError('Server is taking too long to respond. The backend may be waking up — please wait 30 seconds and try again.');
+      } else {
+        setSubmitError('Network Error: Could not reach the server. Check your connection or try again shortly.');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -303,11 +335,13 @@ const Register = ({ setIsRegistered }) => {
               </select>
             </div>
 
-            <button type="submit" className={captured ? "btn-gold" : "btn-disabled"} disabled={!captured} style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '8px' }}>
+            <button type="submit" className={captured && !isSubmitting ? "btn-gold" : "btn-disabled"} disabled={!captured || isSubmitting} style={{ marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '8px' }}>
               <UserPlus size={20} />
-              ENCRYPT & REGISTER
+              {isSubmitting ? 'SECURING ON BLOCKCHAIN...' : 'ENCRYPT & REGISTER'}
             </button>
-            {!captured && <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textAlign: 'center' }}>Face scan required to submit.</p>}
+            {!captured && !isSubmitting && <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textAlign: 'center' }}>Face scan required to submit.</p>}
+            {isSubmitting && <p style={{ color: 'var(--neon-blue)', fontSize: '0.8rem', textAlign: 'center' }}>⏳ Contacting secure server... this may take up to 30 seconds on first attempt.</p>}
+            {submitError && <p style={{ color: '#ff4444', fontSize: '0.85rem', textAlign: 'center', marginTop: '8px', padding: '8px', background: 'rgba(255,68,68,0.1)', borderRadius: '6px', border: '1px solid rgba(255,68,68,0.3)' }}>{submitError}</p>}
 
           </form>
         </div>

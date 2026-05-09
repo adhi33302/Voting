@@ -11,15 +11,29 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// Middleware - Allow Vercel frontend and local dev
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    /\.vercel\.app$/,   // Allow any vercel.app subdomain
+  ],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+app.use(express.json({ limit: '10mb' })); // faceDescriptor arrays can be large
 
 // Request logging for debugging
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   if (req.method === 'POST') console.log('Body:', JSON.stringify(req.body).substring(0, 100) + '...');
   next();
+});
+
+// Health check - used to wake the backend from Render sleep
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // MongoDB Connection
@@ -89,7 +103,7 @@ app.post('/api/register', async (req, res) => {
       faceDescriptor,
       previousHash: previousHash,
       hash: currentHash,
-      createdAt: timestamp
+      createdAt: new Date(timestamp)  // FIX: Schema expects Date, not Number
     });
 
     await newVoter.save();
