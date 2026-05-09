@@ -36,7 +36,7 @@ const Results = () => {
       
       <div style={{ textAlign: 'center', marginBottom: '50px' }}>
         <h1 style={{ fontSize: '2.5rem', marginBottom: '12px' }}>Live Blockchain Tally</h1>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+        <div className="results-badges">
           <div style={{ 
             background: 'rgba(0, 243, 255, 0.1)', 
             padding: '12px 24px', 
@@ -72,11 +72,11 @@ const Results = () => {
           return (
             <div key={candidate.candidateId} style={{ marginBottom: '30px' }}>
               
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <span style={{ fontSize: '1.2rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', gap: '8px', flexWrap: 'wrap' }}>
+                <span className="results-row-label" style={{ fontSize: '1.15rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                   {index + 1}. {candidate.name}
                 </span>
-                <span style={{ fontSize: '1.2rem', color: candidate.color, fontWeight: 'bold' }}>
+                <span className="results-row-value" style={{ fontSize: '1.15rem', color: candidate.color, fontWeight: 'bold', whiteSpace: 'nowrap' }}>
                   {percentage}% ({candidate.voteCount.toLocaleString()})
                 </span>
               </div>

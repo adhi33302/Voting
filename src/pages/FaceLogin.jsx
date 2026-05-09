@@ -238,16 +238,16 @@ const FaceLogin = ({ isRegistered, setIsAuthenticated, hasVoted }) => {
               Position your face for biometric authentication.
             </p>
 
-            <div style={{
-              position: 'relative', width: '300px', height: '300px', margin: '0 auto 40px auto',
+            <div className="face-scanner-box" style={{
               border: authenticated
                 ? '2px solid var(--neon-gold)'
                 : scanError
                   ? '2px solid rgba(255, 68, 68, 0.7)'
                   : '2px dashed rgba(37, 99, 235, 0.4)',
-              borderRadius: '20px', background: 'var(--bg-darker)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              overflow: 'hidden', transition: 'all 0.5s ease'
-            }} className={scanning ? "pulse-active" : ""}>
+              background: 'var(--bg-darker)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'all 0.5s ease'
+            }} className={`face-scanner-box${scanning ? ' pulse-active' : ''}`}>
 
               {/* Camera feed - always visible while on scan step */}
               {step === 1 && !authenticated && (

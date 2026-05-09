@@ -1,79 +1,116 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Fingerprint, Activity } from 'lucide-react';
+import { Shield, Fingerprint, Activity, UserPlus, Home, ChevronRight, X, Menu } from 'lucide-react';
 
 const Navbar = ({ isAuthenticated }) => {
   const location = useLocation();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const navLinks = [
-    { path: '/register', label: 'Register' },
-    { path: '/login', label: 'Authenticate' },
-    ...(isAuthenticated ? [{ path: '/voting', label: 'Vote' }] : []),
-    { path: '/results', label: 'Live Results' }
+    { path: '/', label: 'Home', icon: Home },
+    { path: '/register', label: 'Register', icon: UserPlus },
+    { path: '/login', label: 'Authenticate', icon: Fingerprint },
+    ...(isAuthenticated ? [{ path: '/voting', label: 'Vote', icon: Shield }] : []),
+    { path: '/results', label: 'Live Results', icon: Activity }
   ];
 
-  return (
-    <header style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 100,
-      borderBottom: '1px solid var(--glass-border)',
-      backgroundColor: 'rgba(255, 255, 255, 0.8)',
-      backdropFilter: 'blur(10px)'
-    }}>
-      <div className="container" style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: '80px'
-      }}>
-        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{
-            background: 'rgba(37, 99, 235, 0.05)',
-            padding: '10px',
-            borderRadius: '12px',
-            border: '1px solid var(--neon-blue)'
-          }}>
-            <Shield size={24} color="var(--neon-blue)" />
-          </div>
-          <span style={{ 
-            fontSize: '1.2rem', 
-            fontWeight: 700, 
-            letterSpacing: '1px',
-            color: 'var(--text-primary)'
-          }}>
-            SECURE<span className="neon-text-blue">VOTE</span>
-          </span>
-        </Link>
+  const closeDrawer = () => setDrawerOpen(false);
 
-        <nav style={{ display: 'flex', gap: '24px' }}>
-          {navLinks.map((link) => {
-            const isActive = location.pathname === link.path;
-            return (
-              <Link 
-                key={link.path} 
+  return (
+    <>
+      {/* ── Top Navbar ── */}
+      <header className="navbar">
+        <div className="navbar-inner">
+          {/* Logo */}
+          <Link to="/" className="navbar-logo" onClick={closeDrawer}>
+            <div className="navbar-logo-icon">
+              <Shield size={22} color="var(--neon-blue)" />
+            </div>
+            <span className="navbar-logo-text">
+              SECURE<span className="neon-text-blue">VOTE</span>
+            </span>
+          </Link>
+
+          {/* Desktop links */}
+          <nav className="navbar-links">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
                 to={link.path}
-                style={{
-                  textDecoration: 'none',
-                  color: isActive ? 'var(--neon-blue)' : 'var(--text-secondary)',
-                  fontWeight: 500,
-                  fontSize: '0.95rem',
-                  letterSpacing: '0.5px',
-                  textTransform: 'uppercase',
-                  padding: '8px 0',
-                  borderBottom: isActive ? '2px solid var(--neon-blue)' : '2px solid transparent',
-                  transition: 'all 0.3s ease'
-                }}
+                className={`navbar-link${location.pathname === link.path ? ' active' : ''}`}
               >
                 {link.label}
               </Link>
-            )
+            ))}
+          </nav>
+
+          {/* Hamburger — visible on mobile only */}
+          <button
+            className="navbar-hamburger"
+            aria-label="Toggle menu"
+            onClick={() => setDrawerOpen((v) => !v)}
+          >
+            {drawerOpen
+              ? <X size={22} color="var(--text-primary)" />
+              : <Menu size={22} color="var(--text-primary)" />
+            }
+          </button>
+        </div>
+      </header>
+
+      {/* ── Mobile Slide-down Drawer ── */}
+      <nav className={`navbar-drawer${drawerOpen ? ' open' : ''}`} aria-hidden={!drawerOpen}>
+        {navLinks.map((link) => (
+          <Link
+            key={link.path}
+            to={link.path}
+            className={`drawer-link${location.pathname === link.path ? ' active' : ''}`}
+            onClick={closeDrawer}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <link.icon size={18} />
+              {link.label}
+            </span>
+            <ChevronRight size={16} style={{ opacity: 0.4 }} />
+          </Link>
+        ))}
+      </nav>
+
+      {/* ── Mobile Bottom Nav (phones) ── */}
+      <nav className="mobile-bottom-nav" aria-label="Mobile navigation">
+        <div className="mobile-bottom-nav-inner">
+          {navLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = location.pathname === link.path;
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`mobile-nav-item${isActive ? ' active' : ''}`}
+                onClick={closeDrawer}
+              >
+                <Icon size={20} strokeWidth={isActive ? 2.5 : 1.8} />
+                <span>{link.label}</span>
+              </Link>
+            );
           })}
-        </nav>
-      </div>
-    </header>
+        </div>
+      </nav>
+
+      {/* Backdrop overlay for drawer */}
+      {drawerOpen && (
+        <div
+          onClick={closeDrawer}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 198,
+            background: 'rgba(0,0,0,0.15)',
+            backdropFilter: 'blur(2px)'
+          }}
+        />
+      )}
+    </>
   );
 };
 

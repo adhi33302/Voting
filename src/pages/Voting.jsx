@@ -20,7 +20,7 @@ const CandidateCard = ({ candidate, isSelected, onSelect }) => {
         gap: '16px'
       }}
     >
-      <div style={{
+      <div className="candidate-avatar" style={{
         width: '120px',
         height: '120px',
         borderRadius: '50%',
@@ -167,12 +167,7 @@ const Voting = ({ setHasVoted, hasVoted }) => {
           <p style={{ color: 'var(--text-secondary)', letterSpacing: '2px' }}>SYNCING WITH BLOCKCHAIN LEDGER...</p>
         </div>
       ) : candidates.length > 0 ? (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '30px',
-          marginBottom: '50px'
-        }}>
+        <div className="candidates-grid">
           {candidates.map(candidate => (
             <CandidateCard
               key={candidate.candidateId}
@@ -203,32 +198,21 @@ const Voting = ({ setHasVoted, hasVoted }) => {
         }
       `}</style>
 
-      <div className="flex-center" style={{
-        position: 'sticky',
-        bottom: '20px',
-        padding: '20px',
-        background: 'var(--glass-bg)',
-        backdropFilter: 'blur(10px)',
-        borderTop: '1px solid rgba(0, 243, 255, 0.3)',
-        borderRadius: '16px',
-        zIndex: 50
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{ color: 'var(--text-secondary)' }}>
-            Selected: <span style={{ color: selectedCandidate ? 'var(--neon-gold)' : 'var(--text-secondary)', fontWeight: 'bold', opacity: selectedCandidate ? 1 : 0.5 }}>
-              {selectedCandidate ? candidates.find(c => c.candidateId === selectedCandidate)?.name : 'None'}
-            </span>
-          </div>
-          <button
-            className={selectedCandidate ? "btn-gold" : "btn-disabled"}
-            onClick={handleCastVote}
-            disabled={!selectedCandidate}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 32px', fontSize: '1.1rem' }}
-          >
-            <Shield size={20} />
-            SIGN & SUBMIT VOTE
-          </button>
+      <div className="vote-bar">
+        <div style={{ color: 'var(--text-secondary)', textAlign: 'center' }}>
+          Selected: <span style={{ color: selectedCandidate ? 'var(--neon-gold)' : 'var(--text-secondary)', fontWeight: 'bold', opacity: selectedCandidate ? 1 : 0.5 }}>
+            {selectedCandidate ? candidates.find(c => c.candidateId === selectedCandidate)?.name : 'None'}
+          </span>
         </div>
+        <button
+          className={selectedCandidate ? "btn-gold" : "btn-disabled"}
+          onClick={handleCastVote}
+          disabled={!selectedCandidate}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '14px 32px', fontSize: '1rem' }}
+        >
+          <Shield size={20} />
+          SIGN &amp; SUBMIT VOTE
+        </button>
       </div>
     </div>
   );

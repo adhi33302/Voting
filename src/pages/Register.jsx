@@ -237,26 +237,13 @@ const Register = ({ setIsRegistered }) => {
 
   return (
     <div className="page-wrapper container flex-center">
-      <div className="glass-panel" style={{ 
+      <div className="glass-panel register-grid" style={{ 
         maxWidth: '800px', 
         width: '100%', 
         padding: '40px',
-        display: 'grid',
-        gridTemplateColumns: 'minmax(300px, 1fr) minmax(300px, 1fr)',
-        gap: '40px',
         position: 'relative',
         overflow: 'hidden'
       }}>
-        
-        <style>
-        {`
-          @media (max-width: 768px) {
-            .register-grid {
-              grid-template-columns: 1fr !important;
-            }
-          }
-        `}
-        </style>
 
         <div style={{ position: 'absolute', top: '0', left: '0', height: '100%', width: '4px', background: 'linear-gradient(to bottom, var(--neon-blue), transparent)' }}></div>
 
