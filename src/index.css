@@ -449,10 +449,14 @@ button {
   display: flex;
   height: 100%;
   align-items: stretch;
+  justify-content: center;   /* ← center the group */
+  max-width: 480px;          /* ← cap width so it doesn't spread on wide phones */
+  margin: 0 auto;            /* ← horizontally center the group */
 }
 
 .mobile-nav-item {
   flex: 1;
+  max-width: 96px;           /* ← each tab has a max width so they don't overstretch */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -467,6 +471,7 @@ button {
   padding: 6px 4px;
   transition: all 0.2s ease;
   border-top: 2px solid transparent;
+  position: relative;
   -webkit-tap-highlight-color: transparent;
 }
 
